@@ -1,0 +1,73 @@
+@use '../node_modules/sass-true' as *;
+@use '../src/log' with ($suppress-all: true);
+
+@include describe('error()') {
+  @include it('should log an error when log-level is error') {
+    @include log.configure($log-level: error);
+    $error: log.error('error');
+
+    @include assert-true($error);
+  }
+
+  @include it('should not log an error when level is quiet') {
+    @include log.configure($log-level: quiet);
+    $error: log.error('error');
+
+    @include assert-false($error);
+  }
+}
+
+@include describe('warning()') {
+  @include it('Should not display a warning on error log level') {
+    @include log.configure($log-level: error);
+    $error: log.warning('warning');
+
+    @include assert-false($error);
+  }
+
+  @include it('Should display a warning on warning log level') {
+    @include log.configure($log-level: warning);
+    $error: log.warning('warning');
+
+    @include assert-true($error);
+  }
+}
+
+@include describe('info()') {
+  @include it('Should not display info log on warning level') {
+    @include log.configure($log-level: warning);
+    $error: log.info('info');
+
+    @include assert-false($error);
+  }
+
+  @include it('Should display a info on info level') {
+    @include log.configure($log-level: info);
+    $error: log.info('info');
+
+    @include assert-true($error);
+  }
+}
+
+@include describe('success()') {
+  @include it('Should not display success log on info level') {
+    @include log.configure($log-level: info);
+    $error: log.success('success');
+
+    @include assert-false($error);
+  }
+
+  @include it('Should display a success on success level') {
+    @include log.configure($log-level: success);
+    $error: log.success('success');
+
+    @include assert-true($error);
+  }
+
+  @include it('Should display a success on verbose level') {
+    @include log.configure($log-level: verbose);
+    $error: log.success('success');
+
+    @include assert-true($error);
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "name": "@standardkit/scss-log",
+  "version": "0.1.0",
+  "description": "Easily use severity-based logging inside scss functions",
+  "scripts": {
+    "test": "sass --color test/test.scss test/test.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/standardkit/scss-log.git"
+  },
+  "keywords": [
+    "scss",
+    "standardkit",
+    "log",
+    "logging",
+    "logger",
+    "severity",
+    "utility"
+  ],
+  "author": "Coen Mooij <coenmooij@gmail.com>",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/standardkit/scss-log/issues"
+  },
+  "homepage": "https://github.com/standardkit/scss-log",
+  "devDependencies": {
+    "sass": "^1.0.0",
+    "sass-true": "^6.0.1"
+  }
+}

@@ -1,0 +1,4 @@
+@use '../node_modules/sass-true' as sass-true;
+@use 'log.spec';
+
+@include sass-true.report();

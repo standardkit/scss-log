@@ -1,0 +1,113 @@
+$log-level: error !default;
+$suppress-all: false !default;
+$suppress-errors: false !default;
+$suppress-warnings: false !default;
+$log-labels: (
+  error: '  ERROR:',
+  warning: 'WARNING:',
+  info: '   INFO:',
+  success: 'SUCCESS:'
+) !default;
+
+// Bugfix: '@use with ($variable: null)' overrides the default (fixed in dart-sass 1.32.13)
+@if type-of($log-level) == 'null' {
+  $log-level: error;
+}
+
+@if type-of($suppress-all) == 'null' {
+  $suppress-all: false;
+}
+
+@if type-of($suppress-errors) == 'null' {
+  $suppress-errors: false;
+}
+
+@if type-of($suppress-warnings) == 'null' {
+  $suppress-warnings: false;
+}
+
+@if type-of($log-labels) == 'null' {
+  $log-labels: (
+    error: '  ERROR:',
+    warning: 'WARNING:',
+    info: '   INFO:',
+    success: 'SUCCESS:'
+  );
+}
+
+$log-levels: (
+  quiet: 5,
+  error: 4,
+  warning: 3,
+  info: 2,
+  success: 1,
+  verbose: 0
+);
+
+@mixin configure(
+  $log-level: null,
+  $suppress-errors: null,
+  $suppress-all: null,
+  $suppress-warnings: null,
+  $log-labels: null,
+) {
+  @if $log-level {
+    $log-level: $log-level !global;
+  }
+  @if $suppress-all {
+    $suppress-all: $suppress-all !global;
+  }
+  @if $suppress-errors {
+    $suppress-errors: $suppress-errors !global;
+  }
+  @if $suppress-warnings {
+    $suppress-warnings: $suppress-warnings !global;
+  }
+  @if $log-labels {
+    $log-labels: $log-labels !global;
+  }
+}
+
+@function error($message) {
+  @return log(error, $message);
+}
+
+@function warning($message) {
+  @return log(warning, $message);
+}
+
+@function info($message) {
+  @return log(info, $message);
+}
+
+@function success($message) {
+  @return log(success, $message);
+}
+
+@function log($level, $message) {
+  @if get-log-level($level) >= get-log-level($log-level) {
+    @if $level == error and $suppress-errors == false and $suppress-all == false {
+      @error $message;
+    } @else if $level == warning and $suppress-errors == false and $suppress-all == false {
+      @warn $message;
+      @return true;
+    } @else {
+      @return _text-log($level, $message);
+    }
+  }
+  @return false;
+}
+
+@function _text-log($level, $message) {
+  @debug '#{map-get($log-labels, $level)} #{$message}';
+  @return true;
+}
+
+@function get-log-level($level) {
+  @each $key, $value in $log-levels {
+    @if $key == $level {
+      @return $value;
+    }
+  }
+  @error 'Log level "#{$log-level}" invalid! must be one of: "quiet", "error", "warning", "info", "success", or "verbose"';
+}
